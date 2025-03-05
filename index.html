@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Gatita Virtual</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #fce4ec;
+        }
+        .container {
+            max-width: 400px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px gray;
+        }
+        h1 {
+            color: #ff4081;
+        }
+        img {
+            width: 150px;
+            height: 150px;
+        }
+        button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            background-color: #ff4081;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #e91e63;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>🐱 Mi Gatita Virtual</h1>
+        <img id="gatita-img" src="https://i.imgur.com/SmQQrlo.png" alt="Gatita">
+        <p id="estado">Hambre: 50 | Felicidad: 50 | Energía: 50</p>
+        <button onclick="alimentar()">🍗 Alimentar</button>
+        <button onclick="acariciar()">🐾 Acariciar</button>
+        <button onclick="dormir()">😴 Dormir</button>
+        <button onclick="cazar()">🐭 Cazar</button>
+        <button onclick="bañar()">🚿 Bañar</button>
+        <button onclick="jugar()">🎾 Jugar</button>
+        <button onclick="resetear()">🔄 Reiniciar</button>
+    </div>
+
+    <script>
+        // Cargar datos del usuario
+        let gatita = JSON.parse(localStorage.getItem("gatita")) || {
+            hambre: 50,
+            felicidad: 50,
+            energia: 50,
+            monedas: 100,
+            juguetes: 1
+        };
+
+        function actualizarEstado() {
+            document.getElementById("estado").innerText =
+                `Hambre: ${gatita.hambre} | Felicidad: ${gatita.felicidad} | Energía: ${gatita.energia} | Monedas: ${gatita.monedas} | Juguetes: ${gatita.juguetes}`;
+            localStorage.setItem("gatita", JSON.stringify(gatita));
+        }
+
+        function alimentar() {
+            if (gatita.hambre > 0) {
+                gatita.hambre = Math.max(0, gatita.hambre - 20);
+                gatita.felicidad += 5;
+                actualizarEstado();
+                alert("🍗 Alimentaste a tu gatita.");
+            } else {
+                alert("Tu gatita no tiene hambre.");
+            }
+        }
+
+        function acariciar() {
+            gatita.felicidad = Math.min(100, gatita.felicidad + 15);
+            actualizarEstado();
+            alert("🐾 Acariciaste a tu gatita.");
+        }
+
+        function dormir() {
+            gatita.energia = Math.min(100, gatita.energia + 30);
+            actualizarEstado();
+            alert("😴 Tu gatita ha dormido bien.");
+        }
+
+        function cazar() {
+            let comidaGanada = Math.floor(Math.random() * 20) + 10;
+            gatita.hambre = Math.max(0, gatita.hambre - comidaGanada);
+            gatita.monedas += 5;
+            gatita.felicidad += 10;
+            actualizarEstado();
+            alert(`🐭 Tu gatita cazó y ganó ${comidaGanada} de comida y 5 monedas.`);
+        }
+
+        function bañar() {
+            gatita.felicidad = Math.min(100, gatita.felicidad + 10);
+            actualizarEstado();
+            alert("🚿 Has bañado a tu gatita.");
+        }
+
+        function jugar() {
+            if (gatita.juguetes > 0) {
+                gatita.felicidad = Math.min(100, gatita.felicidad + 20);
+                gatita.energia = Math.max(0, gatita.energia - 10);
+                gatita.juguetes -= 1;
+                actualizarEstado();
+                alert("🎾 Jugaste con tu gatita.");
+            } else {
+                alert("No tienes juguetes. Compra uno.");
+            }
+        }
+
+        function resetear() {
+            localStorage.removeItem("gatita");
+            location.reload();
+        }
+
+        actualizarEstado();
+    </script>
+
+</body>
+</html>
